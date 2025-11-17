@@ -1,6 +1,9 @@
 <?php
 
 use Bitrix\Main\Application;
+use Bitrix\Main\ArgumentException;
+use Bitrix\Main\ArgumentNullException;
+use Bitrix\Main\Config\Option;
 use Bitrix\Main\EventManager;
 use Bitrix\Main\Localization\Loc;
 
@@ -36,11 +39,38 @@ class vartek_screenkeyboard extends CModule
         $APPLICATION->IncludeAdminFile(Loc::getMessage('VSK_INSTALL_TITLE'), __DIR__ . '/step.php');
     }
 
+    /**
+     * @throws ArgumentNullException
+     * @throws ArgumentException
+     */
+    public function DoUninstall(): void
+    {
+        global $APPLICATION;
+
+        $this->UnInstallFiles();
+        $this->UnInstallEvents();
+
+        $request = Application::getInstance()->getContext()->getRequest();
+        if ($request->get('savedata') !== 'Y') Option::delete($this->MODULE_ID);
+
+        UnRegisterModule($this->MODULE_ID);
+
+        $APPLICATION->IncludeAdminFile(Loc::getMessage('VSK_UNINSTALL_TITLE'), __DIR__ . '/unstep.php');
+    }
+
     public function InstallFiles(): bool
     {
         $root = Application::getDocumentRoot();
-        CopyDirFiles(__DIR__ . '/files/components/', $root . '/files/components/', true, true);
+        CopyDirFiles(__DIR__ . '/files/components/', $root . '/local/components/', true, true);
         CopyDirFiles(__DIR__ . '/files/js/', $root . '/local/js/', true, true);
+
+        return true;
+    }
+
+    public function UnInstallFiles(): bool
+    {
+        DeleteDirFilesEx('/local/components/vartek/screenkeyboard/');
+        DeleteDirFilesEx('/local/js/vartek.screenkeyboard/');
 
         return true;
     }
@@ -48,6 +78,19 @@ class vartek_screenkeyboard extends CModule
     public function InstallEvents(): bool
     {
         EventManager::getInstance()->registerEventHandler(
+            'main',
+            'OnEndBufferContent',
+            $this->MODULE_ID,
+            "\\Vartek\\ScreenKeyboard\\EventManager",
+            'injectScript'
+        );
+
+        return true;
+    }
+
+    public function UnInstallEvents(): bool
+    {
+        EventManager::getInstance()->unRegisterEventHandler(
             'main',
             'OnEndBufferContent',
             $this->MODULE_ID,
