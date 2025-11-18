@@ -2,12 +2,5 @@
 
 if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) die();
 
-use Bitrix\Main\Page\Asset;
 ?>
-
-    <div id="sk-keyboard-container"></div>
-    <script>BX.message({ TEMPLATE_FOLDER: '<?=$templateFolder?>' });</script>
-
-<?php
-Asset::getInstance()->addCss($templateFolder . '/style.css');
-Asset::getInstance()->addJs($templateFolder . '/js/init.js');
+<div id="sk-keyboard-container"></div>
