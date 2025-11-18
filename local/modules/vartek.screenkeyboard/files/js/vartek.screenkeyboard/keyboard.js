@@ -9,7 +9,7 @@ class KsoKeyboard {
     }
 
     init() {
-        this.container = document.getElementById('kso-keyboard-container');
+        this.container = document.getElementById('sk-keyboard-container');
         if (!this.container) return console.log('KSO Keyboard container not found!');
 
         ['focusin', 'mousedown', 'touchstart'].forEach(event =>
@@ -65,8 +65,8 @@ class KsoKeyboard {
 
         this.visible = true;
         BX.KSO.setActive(true, this.activeInput);
-        this.container.classList.add('kso-visible');
-        this.container.classList.remove('kso-hiding');
+        this.container.classList.add('sk-visible');
+        this.container.classList.remove('sk-hiding');
 
         this.render();
     }
@@ -76,18 +76,18 @@ class KsoKeyboard {
 
         this.visible = false;
         BX.KSO.setActive(false);
-        this.container.classList.remove('kso-visible');
-        this.container.classList.add('kso-hiding');
+        this.container.classList.remove('sk-visible');
+        this.container.classList.add('sk-hiding');
         setTimeout(() => {
-            this.container.classList.remove('kso-hiding');
+            this.container.classList.remove('sk-hiding');
             this.container.innerHTML = '';
         }, 250);
 
         if (!this.activeInput) return;
 
         const parent = this.activeInput.closest('.catalog-page__card-counter');
-        if (parent) parent.classList.remove('kso-active');
-        this.activeInput.classList.remove('kso-active-counter');
+        if (parent) parent.classList.remove('sk-active');
+        this.activeInput.classList.remove('sk-active-counter');
 
         const buyCounter = this.activeInput.closest('.buy__counter');
         if (buyCounter && buyCounter.dataset.ksoLocked) delete buyCounter.dataset.ksoLocked;
@@ -99,7 +99,7 @@ class KsoKeyboard {
 
         this.triggerValidation();
 
-        this.activeInput.classList.remove('kso-active-input');
+        this.activeInput.classList.remove('sk-active-input');
         this.activeInput = null;
     }
 
@@ -173,20 +173,20 @@ class KsoKeyboard {
     handleFocus(e) {
         if (!this.isInput(e.target)) return;
 
-        document.querySelectorAll('.kso-active-input').forEach(el => {
-            el.classList.remove('kso-active-input');
+        document.querySelectorAll('.sk-active-input').forEach(el => {
+            el.classList.remove('sk-active-input');
         });
 
         this.activeInput = e.target;
-        this.activeInput.classList.add('kso-active-input');
+        this.activeInput.classList.add('sk-active-input');
         this.layout = this.getLayoutForInput(e.target);
         this.show();
 
         if (this.isCounterInput(this.activeInput)) {
-            this.activeInput.classList.add('kso-active-counter');
+            this.activeInput.classList.add('sk-active-counter');
 
             const parent = this.activeInput.closest('.catalog-page__card-counter');
-            if (parent) parent.classList.add('kso-active');
+            if (parent) parent.classList.add('sk-active');
 
             const buyCounter = this.activeInput.closest('.buy__counter');
             if (buyCounter) {
