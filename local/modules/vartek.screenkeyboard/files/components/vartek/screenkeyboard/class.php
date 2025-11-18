@@ -26,7 +26,6 @@ class VartekScreenkeyboardComponent extends CBitrixComponent
         if (Config::get('auto_enable') !== 'Y') {
             Asset::getInstance()->addJs('/local/js/vartek.screenkeyboard/layouts.js');
             Asset::getInstance()->addJs('/local/js/vartek.screenkeyboard/keyboard.js');
-            Asset::getInstance()->addJs('/local/js/vartek.screenkeyboard/state.js');
             Asset::getInstance()->addJs('/local/js/vartek.screenkeyboard/init.js');
             Asset::getInstance()->addString("<script>if (BX && BX.ScreenKeyboard){ BX.ScreenKeyboard.init(); }</script>");
         }
